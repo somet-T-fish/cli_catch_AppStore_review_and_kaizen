@@ -71,7 +71,7 @@ class TestDryRun:
         """--version should print version string."""
         result = runner.invoke(app, ["--version"])
         assert result.exit_code == 0
-        assert "0.1.0" in result.output
+        assert "0.2.0" in result.output
 
     def test_init_creates_config(self, tmp_path: Path) -> None:
         """appreview init should create a config file when given input."""

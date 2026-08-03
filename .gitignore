@@ -1,6 +1,15 @@
+# ── Credentials & secrets (NEVER commit these) ──────────────────────────────
 secrets/
-*.db
 .env
+*.p8
+*.pem
+*.key
+service-account*.json
+*-service-account.json
+google-credentials*.json
+
+# ── Runtime / build artifacts ────────────────────────────────────────────────
+*.db
 __pycache__/
 *.pyc
 .pytest_cache/
@@ -9,3 +18,4 @@ reports/
 dist/
 *.egg-info/
 .mypy_cache/
+
