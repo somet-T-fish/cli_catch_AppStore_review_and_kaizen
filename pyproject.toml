@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "appreview-insight"
-version = "0.1.0"
+version = "0.2.0"
 description = "CLI tool to fetch, analyze, and report on mobile app reviews using LLMs"
 readme = "README.md"
 license = { text = "MIT" }
@@ -14,7 +14,7 @@ authors = [
 ]
 keywords = ["app-store", "google-play", "reviews", "llm", "cli"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Environment :: Console",
   "Intended Audience :: Developers",
   "License :: OSI Approved :: MIT License",
@@ -35,7 +35,7 @@ dependencies = [
   "pyjwt[crypto]>=2.8",
   "google-auth>=2.0",
   "lingua-language-detector>=2.0",
-  "jinja2>=3.1",
+  "jinja2>=3.1.6",
   "structlog>=24.0",
   "openai>=1.0",
   "anthropic>=0.25",

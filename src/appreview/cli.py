@@ -115,12 +115,19 @@ def _get_llm_provider(config: object, env: object) -> object:
 
     Returns:
         LLM provider instance.
+
+    Raises:
+        TypeError: If config or env are not the expected types.
     """
     from appreview.config import AppReviewConfig, EnvSettings
     from appreview.llm import AnthropicProvider, OllamaProvider, OpenAIProvider
 
-    assert isinstance(config, AppReviewConfig)
-    assert isinstance(env, EnvSettings)
+    if not isinstance(config, AppReviewConfig):
+        msg = f"Expected AppReviewConfig, got {type(config).__name__}"
+        raise TypeError(msg)
+    if not isinstance(env, EnvSettings):
+        msg = f"Expected EnvSettings, got {type(env).__name__}"
+        raise TypeError(msg)
 
     provider_name = config.llm.provider
     if provider_name == "openai":
@@ -403,12 +410,20 @@ async def _run_doctor(config_path: Path) -> None:
 
 
 def _create_source(app_cfg: object, env: object, delay_ms: int) -> object:
-    """Create a data source instance for an app config."""
+    """Create a data source instance for an app config.
+
+    Raises:
+        TypeError: If app_cfg or env are not the expected types.
+    """
     from appreview.config import AppConfig, EnvSettings
     from appreview.sources import AppStoreSource, GooglePlaySource
 
-    assert isinstance(app_cfg, AppConfig)
-    assert isinstance(env, EnvSettings)
+    if not isinstance(app_cfg, AppConfig):
+        msg = f"Expected AppConfig, got {type(app_cfg).__name__}"
+        raise TypeError(msg)
+    if not isinstance(env, EnvSettings):
+        msg = f"Expected EnvSettings, got {type(env).__name__}"
+        raise TypeError(msg)
 
     if app_cfg.source == "app_store":
         if not all([env.app_store_issuer_id, env.app_store_key_id, env.app_store_private_key_path]):

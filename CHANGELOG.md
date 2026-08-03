@@ -7,7 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased] — 2026-06-09
+## [Unreleased]
+
+### Security
+
+- **bandit B101 解消**: `cli.py` の `assert isinstance(...)` を `TypeError` を送出する明示的な型ガードに置き換え (`_get_llm_provider`, `_create_source`)
+- **bandit B105 誤検知を抑制**: `pii.py` の `_TOKEN_MASK` は regex バックリファレンス文字列であることを `# nosec B105` コメントで明示
+- **`.gitignore` 強化**: `*.p8`, `*.pem`, `*.key`, `service-account*.json` などの秘密鍵ファイルパターンを追加。コメント付きでセクション分け
+
+### Changed
+
+- **依存バージョン更新**: `jinja2>=3.1.6` に引き上げ (CVE 対応: PYSEC-2026-1471, PYSEC-2026-1475)
+- **`pyproject.toml`**: Development Status を `Alpha` → `Beta` に変更
+
+---
+
+## [0.2.0] — 2026-06-21
+
+### Added
+
+- **`appreview export` コマンド**: レビューを CSV 形式でダンプ (`--app`, `--since`, `--output` オプション)
+- **`--since` に週指定 `2w` を追加**: `_parse_since` が `w` サフィックスをサポート
+- **OpenAI 新モデル対応**: GPT-4.1 / 4.1-mini / 4.1-nano / o3 / o4-mini をコストテーブルに追加
+- **Anthropic 新モデル対応**: `claude-3-7-sonnet-20250219` をコストテーブルに追加
+- **Google Play 指数バックオフリトライ**: `MAX_RETRIES=5`、`Retry-After` ヘッダー対応、`429` を `RateLimitError` に正しくマッピング
+- **言語検出拡張**: タイ語 (th) / インドネシア語 (id) / ベトナム語 (vi) をデフォルト対応言語に追加
+- **`get_reviews_by_rating()`**: 評価スコアで範囲フィルタするクエリを `ReviewRepository` に追加
+- **テスト追加**: `test_cli_utils.py` (11件, `_parse_since` 全フォーマット + エラーケース)、`test_cost.py` (+7件, GPT-4.1 / Claude-3.7 / o3-mini)
+
+### Changed
+
+- **バージョン**: 0.1.0 → 0.2.0
+- **コスト計算**: プレフィックスマッチを `startswith` のみに簡略化、デフォルトフォールバックを `gpt-4.1-mini` に変更
+
+### Fixed
+
+- **Google Play 429 処理**: `429` レスポンスが `RateLimitError` を正しく送出するよう修正
+
+---
+
+## [0.1.1] — 2026-06-09
 
 ### Changed
 
@@ -58,9 +97,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased] / Future
+## [Future]
 
-以下はv0.2以降での実装を検討:
+v0.3 以降での実装を検討中:
 
 - Slack / Discord 通知連携
 - GitHub Issues 自動起票
@@ -71,3 +110,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PyPI 公式公開
 - 多言語UI（現在はプロンプト内応答言語制御のみ）
 - レビュースコア時系列グラフ（matplotlibまたはmermaid）
+

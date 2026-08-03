@@ -32,7 +32,7 @@ _SENSITIVE_URL_PARAM_PATTERN = re.compile(
 _EMAIL_MASK = "[REDACTED_EMAIL]"
 _PHONE_MASK = "[REDACTED_PHONE]"
 _CC_MASK = "[REDACTED_CARD]"
-_TOKEN_MASK = r"\1[REDACTED_TOKEN]"
+_TOKEN_MASK = r"\1[REDACTED_TOKEN]"  # nosec B105 — regex back-ref replacement string, not a password
 
 
 def mask_pii(text: str) -> str:

@@ -97,3 +97,33 @@
 **決定:** 各 CLI コマンド関数は同期で、内部で `asyncio.run()` を呼ぶラッパーパターンを採用。
 
 **根拠:** anyio/asyncer の追加より標準ライブラリのみで解決する方が依存が少ない（§16 第五指針）。
+
+---
+
+## 2026-08-03: セキュリティ監査・強化
+
+**背景:** `bandit` による静的解析と `pip-audit` による依存パッケージ脆弱性チェックを実施。
+
+**実施内容と判断:**
+
+1. **シークレット漏洩チェック（クリア）**
+   - git 履歴・全ファイルを対象にスキャン（`*.p8`, `*.pem`, `*.key`, `.env`, `secrets/`）
+   - `sk-`, `AKIA`, `ghp_`, `AIza`, `-----BEGIN` パターンを全ファイルで検索
+   - 漏洩なし。`README.md` の `sk-...` は例示文字列のみ
+
+2. **bandit B101 (assert 使用) → 型ガードに置換**
+   - `cli.py` の `_get_llm_provider()` と `_create_source()` 内の `assert isinstance(...)` を `if not isinstance(...): raise TypeError(...)` に変更
+   - 根拠: `assert` は `-O` オプション（最適化ビルド）で除去されるため、型安全の保証にならない
+
+3. **bandit B105 (ハードコードパスワード誤検知) → nosec コメント**
+   - `pii.py` の `_TOKEN_MASK = r"\1[REDACTED_TOKEN]"` は regex のバックリファレンス置換文字列であり、パスワードではない
+   - `# nosec B105` コメントを追加して意図を明示（§16 第三指針: 誤検知の抑制には根拠を記録）
+
+4. **`.gitignore` 強化**
+   - `*.p8` (Apple Auth Key), `*.pem`, `*.key`, `service-account*.json` を追加
+   - セクションコメントで「絶対コミットしない」旨を明記
+
+5. **依存パッケージの脆弱性対応**
+   - `jinja2`: `>=3.1` → `>=3.1.6` に引き上げ (PYSEC-2026-1471: Server-Side Template Injection, PYSEC-2026-1475)
+   - `aiohttp` の CVE は本プロジェクトの直接依存ではないためスコープ外。将来的に依存が追加された場合は `>=3.14.1` を指定すること
+
